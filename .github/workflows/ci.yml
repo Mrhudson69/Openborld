@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  macos:
+    name: macOS — build, test, package
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Swift version
+        run: swift --version
+
+      - name: Build
+        run: swift build -c release
+
+      - name: Portability guard
+        run: bash Scripts/check-portability.sh
+
+      - name: Test
+        run: swift run openborld-tests
+
+      - name: Assemble the app bundle
+        run: bash Scripts/build-app.sh release
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Openborld-macos
+          path: build/Openborld.app
+          if-no-files-found: error
+
+  linux:
+    # The core is written to be portable but has never been verified on Linux.
+    # This job is allowed to fail so it reports the real state instead of
+    # blocking every PR — remove continue-on-error once it is green.
+    name: Linux — portable core (informational)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    container: swift:6.0
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install sqlite headers
+        run: apt-get update && apt-get install -y libsqlite3-dev
+
+      - name: Build the portable core
+        run: swift build --product openborld-tests
+
+      - name: Test
+        run: swift run openborld-tests

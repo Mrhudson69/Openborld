@@ -1,0 +1,37 @@
+name: Provider support
+description: Ask for a storage service to be supported
+labels: [provider, enhancement]
+body:
+  - type: input
+    id: service
+    attributes:
+      label: Which service?
+    validations: { required: true }
+  - type: input
+    id: api
+    attributes:
+      label: Link to its API documentation
+    validations: { required: true }
+  - type: dropdown
+    id: auth
+    attributes:
+      label: How does it authenticate?
+      options:
+        - API key / secret
+        - OAuth (needs an app registration)
+        - Username + password
+        - Token / SAS style
+        - Not sure
+  - type: checkboxes
+    id: s3
+    attributes:
+      label: Quick check
+      options:
+        - label: It offers an S3-compatible endpoint (if so, try the "S3-Compatible Storage" connection first — it may already work)
+  - type: checkboxes
+    id: help
+    attributes:
+      label: Help
+      options:
+        - label: I can test against a real account
+        - label: I'd be up for implementing it

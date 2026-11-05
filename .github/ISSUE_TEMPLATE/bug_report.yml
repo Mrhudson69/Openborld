@@ -1,0 +1,55 @@
+name: Bug report
+description: Something behaves incorrectly
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Security issue? Stop.** Don't file it here — see
+        [SECURITY.md](../blob/main/SECURITY.md) and use private reporting.
+  - type: input
+    id: version
+    attributes:
+      label: Openborld version
+      description: From the app, or the commit you built.
+    validations: { required: true }
+  - type: dropdown
+    id: provider
+    attributes:
+      label: Provider
+      options:
+        - Azure Blob Storage
+        - Amazon S3
+        - S3-compatible (say which below)
+        - Backblaze B2
+        - Google Cloud Storage
+        - WebDAV / Nextcloud / ownCloud
+        - Local disk
+        - Not provider-specific
+    validations: { required: true }
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened, and what you expected instead
+    validations: { required: true }
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Add an Azure connection using a SAS URL
+        2. Open a container with more than 5000 blobs
+        3. …
+    validations: { required: true }
+  - type: textarea
+    id: environment
+    attributes:
+      label: macOS version and hardware
+      placeholder: "macOS 14.5, Apple Silicon"
+  - type: textarea
+    id: extra
+    attributes:
+      label: Anything else
+      description: |
+        Error text, screenshots, or `swift run openborld-tests --diagnose`
+        output. **Redact any SAS token, access key, or account name.**

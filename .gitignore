@@ -1,0 +1,97 @@
+# ─── Swift / SwiftPM ──────────────────────────────────────────────────────
+.build/
+.swiftpm/
+Packages/
+*.xcodeproj
+*.xcworkspace
+!default.xcworkspace
+xcuserdata/
+DerivedData/
+*.moved-aside
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+timeline.xctimeline
+playground.xcworkspace
+.netrc
+
+# Package.resolved IS committed: it pins swift-crypto so every contributor and
+# CI build gets the same, audited version.
+
+# ─── Build output and release artifacts ──────────────────────────────────
+build/
+dist/
+out/
+*.app
+*.zip
+*.dmg
+*.pkg
+*.icns
+*.iconset/
+
+# ─── Local runtime state ─────────────────────────────────────────────────
+# These can contain account names, endpoints, container names, and transfer
+# history. They are per-machine and must never be published.
+connections.json
+settings.json
+places.json
+history.json
+*.corrupt-*.json
+*.bak.json
+listings.sqlite
+listings.sqlite-wal
+listings.sqlite-shm
+secrets/
+*.key
+*.pem
+*.p12
+*.mobileprovision
+.env
+.env.*
+!.env.example
+
+# ─── Agent / editor tooling (not part of this project) ───────────────────
+.claude/
+.cursor/
+.aider*
+.continue/
+design-system/
+CLAUDE.md
+AGENTS.md
+
+# ─── Editors ─────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+\#*\#
+.\#*
+
+# ─── OS cruft ────────────────────────────────────────────────────────────
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# ─── Python (the mock cloud server) ──────────────────────────────────────
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ─── Logs, temp, coverage ────────────────────────────────────────────────
+*.log
+*.tmp
+tmp/
+coverage/
+*.profraw
+*.profdata
