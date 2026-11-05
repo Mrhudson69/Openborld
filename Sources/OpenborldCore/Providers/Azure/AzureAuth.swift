@@ -1,6 +1,12 @@
 import Foundation
 import Crypto
 
+#if canImport(FoundationNetworking)
+// On Linux and Windows, Foundation is split and the URL loading system lives
+// in its own module.
+import FoundationNetworking
+#endif
+
 /// How the user chose to authenticate to Azure. Stored in
 /// `Connection.settings[.authMethod]`.
 public enum AzureAuthMethod: String, CaseIterable, Sendable, Identifiable {

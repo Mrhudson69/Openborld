@@ -1,6 +1,12 @@
 import Foundation
 import Observation
 
+#if canImport(FoundationNetworking)
+// On Linux and Windows, Foundation is split and the URL loading system lives
+// in its own module.
+import FoundationNetworking
+#endif
+
 /// Runs every upload, download, and cross-provider copy.
 ///
 /// Lives on the main actor so the UI can read it without synchronisation, but

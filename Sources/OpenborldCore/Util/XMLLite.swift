@@ -1,5 +1,10 @@
 import Foundation
 
+#if canImport(FoundationXML)
+// XMLParser is in FoundationXML on non-Apple platforms.
+import FoundationXML
+#endif
+
 /// A tiny read-only XML tree, built on `XMLParser`.
 ///
 /// S3, Azure, and WebDAV all answer in XML. `XMLDocument` would do the job but

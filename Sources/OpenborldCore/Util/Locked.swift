@@ -1,5 +1,11 @@
 import Foundation
 
+#if canImport(FoundationNetworking)
+// On Linux and Windows, Foundation is split and the URL loading system lives
+// in its own module.
+import FoundationNetworking
+#endif
+
 /// A value behind a lock.
 ///
 /// `NSLock.lock()` is unavailable from async contexts for good reason, but the

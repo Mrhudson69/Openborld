@@ -1,6 +1,12 @@
 import Foundation
 import Crypto
 
+#if canImport(FoundationNetworking)
+// On Linux and Windows, Foundation is split and the URL loading system lives
+// in its own module.
+import FoundationNetworking
+#endif
+
 /// Amazon S3 and every S3-compatible endpoint: Backblaze B2, Google Cloud
 /// Storage's interop API, MinIO, Wasabi, R2, Ceph.
 ///

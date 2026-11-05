@@ -1,5 +1,11 @@
 import Foundation
 
+#if canImport(FoundationNetworking)
+// On Linux and Windows, Foundation is split and the URL loading system lives
+// in its own module.
+import FoundationNetworking
+#endif
+
 /// Shared HTTP engine for every network provider.
 ///
 /// One `URLSession` per process means TLS handshakes and HTTP/2 connections are

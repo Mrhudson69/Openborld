@@ -1,5 +1,11 @@
 import Foundation
 
+#if canImport(FoundationNetworking)
+// On Linux and Windows, Foundation is split and the URL loading system lives
+// in its own module.
+import FoundationNetworking
+#endif
+
 /// Builds a provider from a saved connection.
 public enum ProviderFactory {
     public static func make(connection: Connection, secrets: ConnectionSecrets) throws -> any StorageProvider {

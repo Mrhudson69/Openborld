@@ -1,5 +1,11 @@
 import Foundation
 
+#if canImport(FoundationNetworking)
+// On Linux and Windows, Foundation is split and the URL loading system lives
+// in its own module.
+import FoundationNetworking
+#endif
+
 /// WebDAV, and with it Nextcloud and ownCloud — both of which are WebDAV behind
 /// a provider-specific base path.
 ///

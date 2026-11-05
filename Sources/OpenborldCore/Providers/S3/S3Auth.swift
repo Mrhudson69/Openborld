@@ -1,6 +1,12 @@
 import Foundation
 import Crypto
 
+#if canImport(FoundationNetworking)
+// On Linux and Windows, Foundation is split and the URL loading system lives
+// in its own module.
+import FoundationNetworking
+#endif
+
 /// AWS Signature Version 4.
 ///
 /// Hand-rolled rather than pulled from the AWS SDK: the SDK is a large

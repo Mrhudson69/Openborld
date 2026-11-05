@@ -80,11 +80,14 @@ public final class LocalProvider: StorageProvider, @unchecked Sendable {
 
     public func list(_ path: RemotePath, cursor: String?, pageSize: Int) async throws -> Listing {
         let directory = url(for: path)
-        let keys: [URLResourceKey] = [
+        // `contentTypeKey` and `isPackageKey` are Apple-only resource keys.
+        var keys: [URLResourceKey] = [
             .isDirectoryKey, .fileSizeKey, .contentModificationDateKey,
             .creationDateKey, .isSymbolicLinkKey, .isHiddenKey,
-            .contentTypeKey, .isPackageKey,
         ]
+        #if os(macOS) || os(iOS)
+        keys += [.contentTypeKey, .isPackageKey]
+        #endif
 
         let contents: [URL]
         do {
@@ -107,7 +110,13 @@ public final class LocalProvider: StorageProvider, @unchecked Sendable {
         for entry in slice {
             let values = try? entry.resourceValues(forKeys: Set(keys))
             if values?.isHidden == true, !showHidden { continue }
+            #if os(macOS) || os(iOS)
             let isDirectory = (values?.isDirectory ?? false) && (values?.isPackage != true)
+            let contentType = values?.contentType?.preferredMIMEType
+            #else
+            let isDirectory = values?.isDirectory ?? false
+            let contentType = MIMEType.forFilename(entry.lastPathComponent)
+            #endif
             items.append(CloudItem(
                 name: entry.lastPathComponent,
                 path: path.appending(entry.lastPathComponent),
@@ -115,7 +124,7 @@ public final class LocalProvider: StorageProvider, @unchecked Sendable {
                 size: isDirectory ? nil : values?.fileSize.map(Int64.init),
                 modified: values?.contentModificationDate,
                 created: values?.creationDate,
-                contentType: values?.contentType?.preferredMIMEType,
+                contentType: contentType,
                 permissions: Self.permissionString(for: entry),
                 isSymlink: values?.isSymbolicLink ?? false
             ))
@@ -134,10 +143,13 @@ public final class LocalProvider: StorageProvider, @unchecked Sendable {
 
     public func stat(_ path: RemotePath) async throws -> CloudItem {
         let entry = url(for: path)
-        let keys: Set<URLResourceKey> = [
+        var keys: Set<URLResourceKey> = [
             .isDirectoryKey, .fileSizeKey, .contentModificationDateKey,
-            .creationDateKey, .isSymbolicLinkKey, .contentTypeKey,
+            .creationDateKey, .isSymbolicLinkKey,
         ]
+        #if os(macOS) || os(iOS)
+        keys.insert(.contentTypeKey)
+        #endif
         guard let values = try? entry.resourceValues(forKeys: keys) else {
             throw StorageError.notFound(path.description)
         }
@@ -149,10 +161,18 @@ public final class LocalProvider: StorageProvider, @unchecked Sendable {
             size: isDirectory ? nil : values.fileSize.map(Int64.init),
             modified: values.contentModificationDate,
             created: values.creationDate,
-            contentType: values.contentType?.preferredMIMEType,
+            contentType: statContentType(values, name: path.name),
             permissions: Self.permissionString(for: entry),
             isSymlink: values.isSymbolicLink ?? false
         )
+    }
+
+    private func statContentType(_ values: URLResourceValues, name: String) -> String? {
+        #if os(macOS) || os(iOS)
+        return values.contentType?.preferredMIMEType
+        #else
+        return MIMEType.forFilename(name)
+        #endif
     }
 
     public func metadata(_ path: RemotePath) async throws -> [(key: String, value: String)] {

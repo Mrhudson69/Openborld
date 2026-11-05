@@ -1,6 +1,12 @@
 import Foundation
 import OpenborldCore
 
+#if canImport(FoundationNetworking)
+// On Linux and Windows, Foundation is split and the URL loading system lives
+// in its own module.
+import FoundationNetworking
+#endif
+
 /// Launches `Tests/Support/mock_cloud.py` and tears it down afterwards.
 final class MockCloud {
     let port: Int

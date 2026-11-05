@@ -1,6 +1,12 @@
 import Foundation
 import Crypto
 
+#if canImport(FoundationNetworking)
+// On Linux and Windows, Foundation is split and the URL loading system lives
+// in its own module.
+import FoundationNetworking
+#endif
+
 /// Azure Blob Storage.
 ///
 /// Addresses blobs through whichever credential the connection carries — SAS
