@@ -60,9 +60,9 @@ gh repo edit "$REPO" \
 echo "▸ Branch protection on main…"
 # Rationale for each rule:
 #   - PR required: nothing reaches main unreviewed, including from the owner.
-#   - CI must pass: the macOS job builds, runs 56 tests, and checks portability.
-#     The Linux job is deliberately NOT required — it is informational until
-#     the Linux build is actually verified.
+#   - CI must pass: both jobs build and run all 56 tests. Linux is required
+#     too, because the portable core is verified there and a regression
+#     should fail the PR rather than surface months later.
 #   - Conversation resolution: review comments can't be silently ignored.
 #   - No force pushes or deletion: history on main stays auditable.
 gh api -X PUT "repos/$REPO/branches/main/protection" \
@@ -71,7 +71,7 @@ gh api -X PUT "repos/$REPO/branches/main/protection" \
 {
   "required_status_checks": {
     "strict": true,
-    "contexts": ["macOS — build, test, package"]
+    "contexts": ["macOS — build, test, package", "Linux — portable core"]
   },
   "enforce_admins": false,
   "required_pull_request_reviews": {
@@ -97,5 +97,4 @@ echo "    while you are the only maintainer. Raise it to 1 once someone else"
 echo "    joins — that is the single most valuable change later."
 echo "  • enforce_admins is false, so you can still push a hotfix directly."
 echo "    Set it true if you want the rules to bind you too."
-echo "  • The Linux CI job is informational (continue-on-error) and is not a"
-echo "    required check, because that build has never been verified."
+echo "  • Both CI jobs are required. Linux runs the same 56 tests as macOS."
