@@ -61,8 +61,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install sqlite headers
-        run: apt-get update && apt-get install -y libsqlite3-dev
+      - name: Install sqlite headers and python
+        # python3 runs the mock cloud server. Without it the eight provider
+        # integration tests skip, and those are precisely the ones that
+        # exercise corelibs URLSession — the part most likely to differ.
+        run: apt-get update && apt-get install -y libsqlite3-dev python3
 
       - name: Build the portable core
         run: swift build --product openborld-tests
