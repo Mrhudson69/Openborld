@@ -55,8 +55,9 @@ jobs:
     name: Linux — portable core (informational)
     runs-on: ubuntu-latest
     continue-on-error: true
-    # 6.1, not 6.0: swift-crypto pulls swift-asn1, which requires tools 6.1.
-    container: swift:6.1
+    # 6.4: 6.1's libswiftObservation.so fails to link with an undefined
+    # reference to swift::threading::fatal — a toolchain defect, not ours.
+    container: swift:6.4
     steps:
       - uses: actions/checkout@v4
 
