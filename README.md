@@ -367,8 +367,8 @@ S3, with nothing but a `403` to debug from.
 
 | Target | macOS | Linux | Windows |
 |---|---|---|---|
-| `OpenborldCore` | ✅ | 🟡 by construction, **unverified** | 🟡 by construction, **unverified** |
-| `openborld-tests` | ✅ | 🟡 unverified | 🟡 unverified |
+| `OpenborldCore` | ✅ verified in CI | ✅ verified in CI | 🟡 by construction, **unverified** |
+| `openborld-tests` | ✅ 56/56 | ✅ 56/56 | 🟡 unverified |
 | `Openborld` (the app) | ✅ | ❌ impossible | ❌ impossible |
 
 The core's Apple-only dependencies were replaced: CryptoKit → swift-crypto,
@@ -377,15 +377,18 @@ UniformTypeIdentifiers → an explicit MIME table, `SQLite3` → a `CSQLite` sys
 module, and per-task URLSession delegates → a session-level delegate (per-task
 delegates don't exist in swift-corelibs-foundation).
 
-**But the Linux and Windows builds have never been compiled** — there was no
-container runtime available. "Portable" means structurally correct, not
-observed to work. To find out:
+**Linux is verified in CI** on every push: the core builds and all 56 tests
+pass, including the Azure and S3 integration suites driving
+swift-corelibs-foundation's `URLSession`. Reproduce it locally with:
 
 ```bash
-docker run --rm -v "$PWD":/src -w /src swift:6.0 bash -c \
-  "apt-get update && apt-get install -y libsqlite3-dev && \
+docker run --rm -v "$PWD":/src -w /src swift:6.4 bash -c \
+  "apt-get update && apt-get install -y libsqlite3-dev python3 && \
    swift build --product openborld-tests && swift run openborld-tests"
 ```
+
+**Windows is still unverified.** The same split-Foundation handling should
+apply, but no one has run it. A CI job for it is a welcome contribution.
 
 **There is no cross-platform UI**, and this is the big open question. SwiftUI
 does not exist on Linux or Windows, so the app layer cannot be ported. The

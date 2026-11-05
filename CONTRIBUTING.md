@@ -101,10 +101,8 @@ Ordered roughly by how much they'd help:
 
 1. **Provider implementations.** OpenStack Swift and SFTP are the most
    requested. See [Adding a provider](#adding-a-provider).
-2. **Verifying the Linux build.** The core was made portable but has never
-   been compiled on Linux. Getting `swift run openborld-tests` green in a
-   `swift:6.0` container — and fixing whatever corelibs-Foundation gaps turn
-   up — would turn a claim into a fact.
+2. **A Windows CI job.** Linux is verified in CI (56/56); Windows is not.
+   The same split-Foundation handling should apply, but nobody has run it.
 3. **Testing against real services.** The integration suite runs against a
    local mock. Reports of real-world behaviour with Wasabi, R2, MinIO, Ceph,
    sovereign Azure clouds, or Nextcloud are genuinely valuable, and so are

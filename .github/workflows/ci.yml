@@ -49,12 +49,11 @@ jobs:
           if-no-files-found: error
 
   linux:
-    # The core is written to be portable but has never been verified on Linux.
-    # This job is allowed to fail so it reports the real state instead of
-    # blocking every PR — remove continue-on-error once it is green.
-    name: Linux — portable core (informational)
+    # A required check: the portable core builds and passes all 56 tests here,
+    # so a change that breaks Linux should fail the PR rather than be noticed
+    # months later.
+    name: Linux — portable core
     runs-on: ubuntu-latest
-    continue-on-error: true
     # 6.4: 6.1's libswiftObservation.so fails to link with an undefined
     # reference to swift::threading::fatal — a toolchain defect, not ours.
     container: swift:6.4
