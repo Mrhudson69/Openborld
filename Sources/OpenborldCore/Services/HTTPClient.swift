@@ -25,7 +25,11 @@ public final class HTTPClient: NSObject, @unchecked Sendable {
         // Long transfers must not be killed by a request timeout; the per-request
         // timeout above covers stalls between bytes.
         config.timeoutIntervalForResource = 86_400
+        #if canImport(Darwin)
+        // Get-only in swift-corelibs-foundation; it simply has no equivalent
+        // behaviour, so elsewhere a request fails fast instead of waiting.
         config.waitsForConnectivity = true
+        #endif
         config.requestCachePolicy = .reloadIgnoringLocalCacheData
         config.urlCache = nil
         config.httpShouldUsePipelining = true
